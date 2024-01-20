@@ -4,6 +4,10 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
+// SMS 
+const smsService = require('./smsService')
+const from = '+14132393768';
+
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
