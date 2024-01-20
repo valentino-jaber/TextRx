@@ -6,7 +6,13 @@ const port = 3000;
 
 // SMS service using Twilio
 const smsService = require('./smsService')
-const from = '+14132393768';
+const from = '+14132393768'
+const to = '+17789380866'
+
+// Test SMS
+smsService.sendSMS("This is a test", from, to)
+  .then(response => console.log(`Notification sent! SID: ${response.sid}`))
+  .catch(error => console.error(`Error sending notification: ${error.message}`));
 
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
