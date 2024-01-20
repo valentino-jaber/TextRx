@@ -1,0 +1,22 @@
+{
+  "name": "textrx",
+  "version": "1.0.0",
+  "description": "Track prescription records and get smart health notifications",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valentino-jaber/TextRx.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/valentino-jaber/TextRx/issues"
+  },
+  "homepage": "https://github.com/valentino-jaber/TextRx#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
