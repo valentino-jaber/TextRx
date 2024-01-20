@@ -1,1 +1,9 @@
 node_modules/
+
+backend/package-lock.json
+
+.vscode/
+
+*.log
+
+.env
