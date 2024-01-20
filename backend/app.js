@@ -1,10 +1,14 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const path = require('path');
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+const app = express();
+const port = 3000;
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+// Serve static files from the 'frontend' folder
+app.use(express.static(path.join(__dirname, '../frontend')));
+
+// Define your API routes or other backend logic here
+
+app.listen(port, () => {
+  console.log(`Server is running at http://localhost:${port}`);
 });
