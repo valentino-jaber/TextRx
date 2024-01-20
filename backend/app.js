@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// SMS 
+// SMS service using Twilio
 const smsService = require('./smsService')
 const from = '+14132393768';
 
