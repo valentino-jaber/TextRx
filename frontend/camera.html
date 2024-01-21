@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drug Detector</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        #camera-stream {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Drug Detector</h1>
+    <h3 style="text-align: center;">Take a photo of your drug label!</h3>
+    
+    <video id="camera-stream" autoplay></video>
+    
+    <canvas id="photo-canvas" style="display: none;"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.2.2/dist/tesseract.js"></script>
+    
+    <script>
+        // Request access to the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var videoElement = document.getElementById('camera-stream');
+                videoElement.srcObject = stream;
+                
+                // Capture photo every 5 seconds
+                setInterval(function() {
+                    var canvasElement = document.getElementById('photo-canvas');
+                    var context = canvasElement.getContext('2d');
+                    
+                    // Set the canvas size to match the video stream
+                    canvasElement.width = videoElement.videoWidth;
+                    canvasElement.height = videoElement.videoHeight;
+                    
+                    // Draw the current video frame onto the canvas
+                    context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                    
+                    // Get the image data from the canvas
+                    var imageData = canvasElement.toDataURL('image/png');
+                    
+                    // Do something with the image data (e.g. send it to a server)
+                    // console.log('Captured photo:', imageData);
+
+                     // Use Tesseract.js to perform OCR on the image data
+                     Tesseract.recognize(
+                        imageData,
+                        'eng', // Specify language ('eng' for English)
+                        { logger: info => console.log(info) }
+                    ).then(({ data: { text } }) => {
+                        // Do something with the recognized text
+                        console.log('Recognized text:', text);
+                    });
+                }, 5000);
+            })
+            .catch(function(error) {
+                console.error('Error accessing the camera:', error);
+            });
+    </script>
+</body>
+</html>
+
