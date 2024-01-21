@@ -107,8 +107,8 @@ app.listen(port, () => {
 });
 
 //route for camera pages
-app.get('/camera', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/camera.html'));
+app.get('/newrx', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/newrx.html'));
 });
 
 app.use("/userDrugManager", userDrugManagerRouter);
