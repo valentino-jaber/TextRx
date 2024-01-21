@@ -8,6 +8,9 @@ const vonage = new Vonage({
 
 const from = "19025952717"
 
+// multiply frequency by this amount for demo purposes
+const demo = 1440; 
+
 export async function sendSMS(to, text) {
     await vonage.sms.send({to, from, text})
         .then(resp => { console.log('Message sent successfully'); console.log(resp); })
@@ -25,7 +28,7 @@ export async function sendSMS(to, text) {
 
 function sendNotification(phoneNumber, text, time, endTime) {
 
-  console.log("endTime at sendnotif funct" + endTime)
+  // console.log("endTime at sendnotif funct" + endTime)
   const job = schedule.scheduleJob(time, function() {
     if (time.getTime() > endTime.getTime()) {
       console.log("Current time" + time + "is after finishing time" + endTime);
@@ -65,6 +68,8 @@ function incrementHours(frequency, reminder, times, interval) {
 // called for each prescription
 export function setNotificationPeriod(frequency, drugName, endTime, phoneNumber, username) {
   // console.log("endTime" + endTime)
+  // for demo purposes
+  frequency *= demo  
   let times = [];
   // const phoneNumber = "17789380866";
   const text = "Hello " + username + "!\n \nTime for your " + drugName + "!\n \nStay healthy!";

@@ -219,12 +219,12 @@ app.use(function(err, req, res, next) {
 
 async function getInfo(userID) {
   let userDrug
-  let phoneNumber = '17789380866'
+  let phoneNumber
   let first_name
   try {
     let user = await passage.user.get(userID);
     const full_name = user.user_metadata.full_name;
-    // phoneNumber = user.phone;
+    phoneNumber = user.phone;
     first_name = full_name.replace(/ .*/,'');
   } catch (error) {
     console.error('Error fetching user name:', error);
@@ -245,21 +245,18 @@ async function getInfo(userID) {
     drugNames.push(userDrug.drugs[i].drugName);
     endTimes.push(userDrug.drugs[i].expiryDate);
     let numberMatch = userDrug.drugs[i].instruction.match(/\d+/);
-    console.log("Number match: " + numberMatch)
+    // console.log("Number match: " + numberMatch)
     let frequency;
     if (numberMatch) {
-      frequency = parseInt(numberMatch[0]) * 1440; // change this
-      console.log("Frequency: " + frequency);
+      frequency = parseInt(numberMatch[0]); 
     }
     frequencies.push(frequency);
   }
   // test
-  endTimes[0] = new Date(2024, 1, 24);
-  console.log("endTimes[0]" + endTimes[0])
+  // endTimes[0] = new Date(2024, 1, 24
   // set notifications for each drug
   for (let i = 0; i < userDrug.drugs.length; i++) {
-    if (!(frequencies === null || phoneNumber === null || endTimes === null)) {
-      console.log("endTimes[i]:" + endTimes[i])
+    if (!(frequencies.includes(null) || phoneNumber === null || endTimes.includes(null))) {
       setNotificationPeriod(frequencies[i], drugNames[i], endTimes[i], phoneNumber, first_name)
     }
   }
