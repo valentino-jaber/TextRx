@@ -33,18 +33,54 @@ router.get('/', async function(req, res, next) {
 router.post('/upload', async (req, res) => {
     console.log("we got a POST request");
     const {userId, drugs} = req.body;
-  
-    // Create a new document
-    const userDrug = new dbModels.UserDrugCollection({ userId , drugs});
-  
-    // Save the document to MongoDB
-    try {
-      await userDrug.save();
-      res.status(200).send('Successfully saved to database');
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error saving to database');
-    }  
+
+    const record = await dbFunctions.dbFindRecord(dbModels.UserDrugCollection, {userId});
+    if (record == null) {
+        // Create a new document
+        const userDrug = new dbModels.UserDrugCollection({ userId , drugs});
+    
+        // Save the document to MongoDB
+        try {
+        await userDrug.save();
+        res.status(200).send('Successfully saved to database');
+        } catch (err) {
+        console.error(err);
+        res.status(500).send('Error saving to database');
+        }  
+    } else {
+        // User ID Record already exists
+        console.log("User record already exists");
+        const userDrugs = record.drugs;
+        let uniqueDrugs = [];
+        for (const drug of drugs) {
+            let found = false;
+            for (const userDrug of userDrugs) {
+                
+                console.log("Input drug name " + drug.drugName);
+                console.log("Existing drug name " + userDrug.drugName);
+
+                if (drug.drugName == userDrug.drugName) {
+                    console.log("Match!");
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                //add the drug to the array
+                uniqueDrugs.push(drug);
+            }
+          
+        }
+        console.log("Unique Drugs: " + uniqueDrugs);   
+        record.drugs.push(...uniqueDrugs);
+        await record.save();
+        // console.log("You're already on this medicine, no need to update");
+        // res.status(200).send('Database is not updated since prescription already exists');
+        res.status(200).send('Success updating the database');
+    }
+
+    
 });
 
 // PUT
@@ -86,10 +122,26 @@ router.put('/remove-one', async (req, res) => {
         }
         
       }
+
+      await dbFunctions.dbUpdateMany(dbModels.UserDrugCollection, {}, { $pull: { drugs: { quantity: 0 } } });
   
       res.status(200).send("Successfully updated the database");
       return;
   
   });
+
+// DELETE
+router.delete('/remove-all', async (req, res) => {
+    const userId = req.body.userId;
+    let inputDrugs = req.body.drugs;
+
+    for (const inputDrug of inputDrugs) {
+        console.log(inputDrug);
+        await dbFunctions.dbUpdateOne(dbModels.UserDrugCollection, {userId}, { $pull: { drugs: { drugName: inputDrug } } });
+    }
+
+    res.status(200).send("Sucessfully updated the database");
+    return;
+});
 
 export default router;

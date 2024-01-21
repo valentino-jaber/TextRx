@@ -37,8 +37,13 @@ export const dbFindAllRecords = async (model, filter) => {
 export const dbUpdateOne = async (model, filter, update) => {
     let record = await model.updateOne(filter, update);
     return record;
-};
+}
 
+export const dbUpdateMany = async (model, filter, update) => {
+    let record = await model.updateMany(filter, update);
+    return record;
+}
+  
 export const dbSaveRecord = async (record) => {
     await record.save();
 };
@@ -52,5 +57,5 @@ export const Models = {
 };
 
 export const Functions = {
-    dbFindRecord, dbFindAllRecords, dbUpdateOne, dbSaveRecord, dbDeleteRecord
+    dbFindRecord, dbFindAllRecords, dbUpdateOne, dbUpdateMany, dbSaveRecord, dbDeleteRecord
 };
