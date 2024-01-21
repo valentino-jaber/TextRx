@@ -4,15 +4,15 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// SMS service using Twilio
-const smsService = require('./smsService')
-const from = '+14132393768'
-const to = '+17789380866'
+// To send SMS
+const sendSMS = require('./smsService');
 
-// Test SMS
-smsService.sendSMS("This is a test", from, to)
-  .then(response => console.log(`Notification sent! SID: ${response.sid}`))
-  .catch(error => console.error(`Error sending notification: ${error.message}`));
+const to = "17789380866"
+const from = "19025952717"
+const text = 'A text message sent using the Vonage SMS API'
+
+// A test SMS
+sendSMS(to, from, text);
 
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));

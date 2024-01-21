@@ -1,17 +1,16 @@
-const twilio = require('twilio');
+const { Vonage } = require('@vonage/server-sdk')
 
-const accountSid = 'AC04e2873aa9ee00b318e3137bf7d93e7e';
-const authToken = 'abfdfbffbfa07163b0c144f492ff5ce5';
-const client = twilio(accountSid, authToken);
+const vonage = new Vonage({
+  apiKey: "aca7d292",
+  apiSecret: "YPq9g2gmPs3tcCXI"
+})
 
-function sendSMS(message, from, to) {
-  return client.messages.create({
-    body: message,
-    from: from,
-    to: to
-  });
+
+
+async function sendSMS(to, from, text) {
+    await vonage.sms.send({to, from, text})
+        .then(resp => { console.log('Message sent successfully'); console.log(resp); })
+        .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });
 }
 
-module.exports = {
-  sendSMS
-};
+module.exports = sendSMS;
