@@ -76,17 +76,6 @@
                 <div class="navbar-nav w-100">
                     <a href="dashboard.html" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
                     <a href="newrx.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Add New Rx</a>
-                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
-                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
-                    <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="far fa-file-alt me-2"></i>Pages</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            
-                            <a href="404.html" class="dropdown-item">404 Error</a>
-                            <a href="blank.html" class="dropdown-item">Blank Page</a>
-                        </div>
-                    </div>
                 </div>
             </nav>
         </div>
@@ -174,31 +163,17 @@
                         <th scope="col">Dosage</th>
                         <th scope="col">Amount Left</th>
                         <th scope="col">Run out Date</th>
-                        <th scope="col">Action</th> <!-- Updated header for the delete column -->
+                        <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody id="data-table-body">
-                    <!-- Example Row -->
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox"></td>
-                        <td>Medicine Name</td>
-                        <td>20mg</td>
-                        <td>15</td>
-                        <td>2024-02-01</td>
-                        <td>
-                            <button class="btn btn-danger delete-row-button">X</button> <!-- Red X Button -->
-                        </td>
-                    </tr>
-                    <!-- Additional rows will be similar -->
+                    <!-- Use the correct id for the table body -->
                 </tbody>
             </table>
-            
 
             <script>
                 document.addEventListener('DOMContentLoaded', async () => {
-
-                    let user_Id;
-
                     try {
                         // Fetch userId from another endpoint
                         const userIdResponse = await fetch('/api/getUserID');
@@ -208,10 +183,6 @@
                 
                         const userData = await userIdResponse.json();
                         const userId = userData.name;
-
-                        user_Id = userId;
-
-                        
                 
                         console.log("USERID: " + userId);
                         // Now, use the obtained userId to fetch data from userDrugManager
@@ -232,92 +203,38 @@
                 
                     // Function to populate the table
                     function populateTable(data) {
-                        console.log("populating table");
-                        // Get the table body
-                        const tableBody = document.querySelector('#data-table-body');
+    console.log("populating table");
+    // Get the table body
+    const tableBody = document.querySelector('#data-table-body');
 
-                        if (!Array.isArray(data)) {
-                            console.error('API response does not contain an array:', data);
-                            return;
-                        }
+    if (!Array.isArray(data)) {
+        console.error('API response does not contain an array:', data);
+        return;
+    }
 
-                        // Iterate through the data and create rows
-                        data.forEach(user => {
-                            user.drugs.forEach(drug => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td></td>
-                                    <td style="display: none;" id="hidden-user-name" user-name="${user}">Hidden User Name</td>
-                                    <td style="display: none;">${user}"</td>
-                                    <td>${drug.drugName}</td>
-                                    <td>${drug.instruction}</td>
-                                    <td>${drug.quantity}</td>
-                                    <td>${drug.expiryDate ? new Date(drug.expiryDate).toLocaleDateString() : 'N/A'}</td>
-                                    <td><button class="btn btn-danger delete-row-button" data-drug-name="${drug.drugName}">X</button></td>`;
-                                    // Add more cells based on your JSON structure
-                                    tableBody.appendChild(row);
-                                });
-                            });
-                        }
+    // Iterate through the data and create rows
+    data.forEach(user => {
+        user.drugs.forEach(drug => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                 <td></td>
+                <td>${drug.drugName}</td>
+                <td>${drug.instruction}</td>
+                <td>${drug.quantity}</td>
+                <td>${drug.expiryDate ? new Date(drug.expiryDate).toLocaleDateString() : 'N/A'}</td>
+            `;
+            // Add more cells based on your JSON structure
+            tableBody.appendChild(row);
+        });
+    });
+}
 
-                        async function apiCallToDeleteRow(drugs, userId) {
-                        
-
-                            try {
-                                // Make an API call to process the deletion
-                                const deleteResponse = await fetch('/api/process-drug-deletion', { // Updated endpoint
-                                    method: 'POST', // Using POST method
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({ userId, drugs }), // Sending just the drug name
-                                });
-
-                                if (!deleteResponse.ok) {
-                                    throw new Error(`HTTP error! Status: ${deleteResponse.status}`);
-                                }
-
-                                // If the process was successful, refresh the page
-                                console.log('Drug processed for deletion successfully');
-                                // window.location.reload();
-
-                            } catch (error) {
-                                console.error('Error processing drug deletion:', error);
-                                // Handle additional error responses or UI updates here
-                            }
-                        }
-
-
-
-
-                        document.getElementById('data-table-body').addEventListener('click', function(e) {
-                            if (e.target && e.target.classList.contains('delete-row-button')) {
-                                // Get the drug name from the data attribute of the clicked button
-                                const drugName = e.target.getAttribute('data-drug-name');
-                                const userId = e.target.getAttribute('user-name');
-                                // Now you can use drugName in your API call or other logic
-                                console.log("Deleting drug:", drugName);
-                                console.log("for user: " + user_Id);
-
-                                let stringifyDrugName = JSON.stringify(drugName);
-                                let trimmedDrugName = stringifyDrugName.trim();
-
-                                let drugArray = [];
-                                drugArray.push(trimmedDrugName);
-
-                                apiCallToDeleteRow(drugArray, user_Id); // Modify your function to use drugName
-                            }
-                        });
-
-
-                    });
+                });
                 </script>
 
         </div>
     </div>
-</div>
-<!-- Recent Sales End -->
-
+</div
 
             
         </div>
