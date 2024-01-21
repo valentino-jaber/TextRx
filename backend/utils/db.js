@@ -4,7 +4,7 @@ mongoose.connect("mongodb+srv://wuj7:6UJhxwFJxIiVrZ7j@nwhacks2024.d8lmoos.mongod
 const drug = new mongoose.Schema({
     drugName: String,
     expiryDate: Date,
-    count: Number,
+    quantity: Number,
     instruction: String
 })
 
