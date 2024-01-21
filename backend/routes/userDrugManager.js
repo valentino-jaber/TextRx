@@ -2,6 +2,7 @@ import express from 'express';
 import { Models as dbModels, Functions as dbFunctions } from "../utils/db.js";
 import bodyParser from 'body-parser';
 import url from 'url';
+import fetch from 'node-fetch';
 
 const router = express.Router();
 const { json, urlencoded } = bodyParser;
@@ -130,18 +131,45 @@ router.put('/remove-one', async (req, res) => {
   
   });
 
-// DELETE
+/// DELETE
 router.delete('/remove-all', async (req, res) => {
-    const userId = req.body.userId;
-    let inputDrugs = req.body.drugs;
+    const userId = req.query.userId;
+  
+    try {
+      const data = req.body;
+      const userId = data.userId;
+      const drugs = data.drugs;
 
-    for (const inputDrug of inputDrugs) {
-        console.log(inputDrug);
-        await dbFunctions.dbUpdateOne(dbModels.UserDrugCollection, {userId}, { $pull: { drugs: { drugName: inputDrug } } });
+      console.log("SHIT:  " + drugs.drugName);
+      console.log("SHIT2:  " + drugs[0].drugname);
+
+      let drugs3 = JSON.stringify(drugs);
+      drugs3.replace(/\n/g, '');
+
+      console.log("D4: " + drugs3);
+
+
+      let drugsList99 = ["", "", ""];
+      drugsList99.push(drugs3);
+
+      let trimmedStr = drugs3.trim();
+      console.log("TS: " + trimmedStr);
+
+      console.log("(;;;;;;;;;);");
+
+
+        for (let inputDrug of drugsList99) {
+            console.log("fDL99: " + inputDrug);
+             console.log("hDT3: " + typeof(inputDrug));
+        await dbFunctions.dbUpdateOne(dbModels.UserDrugCollection, { userId }, { $pull: { drugs: { drugName: inputDrug } } });
+      }
+  
+      res.status(200).send("Successfully updated the database");
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
+  });
 
-    res.status(200).send("Sucessfully updated the database");
-    return;
-});
 
 export default router;
