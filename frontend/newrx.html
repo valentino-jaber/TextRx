@@ -347,7 +347,6 @@
                                                 const response = await fetch('/api/getUserID'); 
                                                 const data = await response.json();
                                                 const userId = data.name;
-                                                // console.log("USER1: " + data.name);
 
                                                 
 
@@ -377,7 +376,7 @@
                                                             drugName: matchingSubstring,
                                                             expiryDate: expiryValue,
                                                             quantity: parseInt(quantityValue),
-                                                            dosage: parseInt(dosageValue),
+                                                            instruction: parseInt(dosageValue),
                                                         }],
                                                     }),
                                                 })
