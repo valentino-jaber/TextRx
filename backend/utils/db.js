@@ -21,4 +21,35 @@ db.once('open', function() {
   console.log("We're connected to MongoDB!");
 });
 
-module.exports = {UserDrugCollection};
+// Utility Functions
+const dbFindRecord = async (model, filter) => {
+    let record = await model.findOne(filter);
+    return record;
+  }
+  
+  const dbFindAllRecords = async (model, filter) => {
+    let records = await model.find(filter);
+    return records;
+  }
+  
+  const dbUpdateOne = async (model, filter, update) => {
+    let record = await model.updateOne(filter, update);
+    return record;
+  }
+  
+  const dbSaveRecord = async (record) => {
+    await record.save();
+  }
+  
+  const dbDeleteRecord = async (record) => {
+    await record.deleteOne();
+  }
+
+module.exports = {
+    Models: {
+        UserDrugCollection
+    },
+    Functions: {
+        dbFindRecord, dbFindAllRecords, dbUpdateOne, dbSaveRecord, dbDeleteRecord
+    }
+};
