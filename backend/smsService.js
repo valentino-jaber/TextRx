@@ -24,7 +24,8 @@ export async function sendSMS(to, text) {
 }*/
 
 function sendNotification(phoneNumber, text, time, endTime) {
-  
+
+  // console.log("endTime at sendnotif funct" + endTime)
   const job = schedule.scheduleJob(time, function() {
     if (time.getTime() > endTime.getTime()) {
       console.log("Current time" + time + "is after finishing time" + endTime);
@@ -38,6 +39,9 @@ function sendNotification(phoneNumber, text, time, endTime) {
 // functions to generate array of notification times
 function incrementSeconds(frequency, reminder, times, interval) {
   const SECOND = 1000;
+  console.log("Frequency:" + frequency)
+  console.log("Interval" + interval)
+  console.log("Reminder:" + reminder)
   for (let i = 0; i < frequency; i++) {
     reminder.setTime(reminder.getTime() + interval * SECOND)
     times.push(new Date(reminder))
@@ -60,6 +64,7 @@ function incrementHours(frequency, reminder, times, interval) {
 
 // called for each prescription
 export function setNotificationPeriod(frequency, drugName, endTime, phoneNumber, username) {
+  console.log("endTime" + endTime)
   let times = [];
   // const phoneNumber = "17789380866";
   const text = "Hello" + username + "!\n \nTime for your " + drugName + ".\n \nStay healthy!";

@@ -218,38 +218,50 @@ app.use(function(err, req, res, next) {
 });
 
 async function getInfo(userID) {
+  let userDrug
+  let phoneNumber = '17789380866'
+  let first_name
   try {
     let user = await passage.user.get(userID);
     const full_name = user.user_metadata.full_name;
-    const phoneNumber = user.phone;
-    const first_name = full_name.replace(/ .*/,'');
+    // phoneNumber = user.phone;
+    first_name = full_name.replace(/ .*/,'');
   } catch (error) {
     console.error('Error fetching user name:', error);
   }
   const filter = { userId: userID };
-  const userDrug = await dbFunctions.dbFindRecord(UserDrugCollection, filter);
+  userDrug = await dbFunctions.dbFindRecord(UserDrugCollection, filter);
   if (!userDrug) {
     console.log('Record not found.');
   }
+  else if (userDrug.drugs === null) {
+    console.log("no drugs")
+  }
   else {
-    drugs = userDrug.drugs;
-    const drugNames = []
-  const endTimes = []
-  const frequencies = []
-  console.log(drugs.length);
-  for (let i = 0; i < drugs.length; i++) {
-    drugNames.push(drugs[i].drugName);
-    endTimes.push(drugs[i].expiryDate);
-    numberMatch = drugs[i].instruction.match(/\d+/);
+  let drugNames = []
+  let endTimes = []
+  let frequencies = []
+  for (let i = 0; i < userDrug.drugs.length; i++) {
+    drugNames.push(userDrug.drugs[i].drugName);
+    endTimes.push(userDrug.drugs[i].expiryDate);
+    let numberMatch = userDrug.drugs[i].instruction.match(/\d+/);
+    console.log("Number match: " + numberMatch)
     let frequency;
     if (numberMatch) {
-      frequency = parseInt(numberMatch[0]);
+      frequency = parseInt(numberMatch[0]); // change this
+      console.log("Frequency: " + frequency);
     }
     frequencies.push(frequency);
   }
+  // test
+  const now = new Date();
+  endTimes[0] = now.setHours(now.getHours() + 24)
+  console.log("endTimes[0]" + endTimes[0])
   // set notifications for each drug
-  for (let i = 0; i < drugs.length; i++) {
-    setNotificationPeriod(frequencies[i], drugNames[i], endTimes[i], phoneNumber, first_name)
+  for (let i = 0; i < userDrug.drugs.length; i++) {
+    if (!(frequencies === null || phoneNumber === null || endTimes === null)) {
+      setNotificationPeriod(frequencies[i], drugNames[i], endTimes[i], phoneNumber, first_name)
+    }
   }
   }
 }
