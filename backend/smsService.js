@@ -5,9 +5,9 @@ const vonage = new Vonage({
   apiSecret: "YPq9g2gmPs3tcCXI"
 })
 
+const from = "19025952717"
 
-
-async function sendSMS(to, from, text) {
+async function sendSMS(to, text) {
     await vonage.sms.send({to, from, text})
         .then(resp => { console.log('Message sent successfully'); console.log(resp); })
         .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });

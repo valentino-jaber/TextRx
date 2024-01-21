@@ -4,16 +4,6 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// To send SMS
-const sendSMS = require('./smsService');
-
-const to = "17789380866"
-const from = "19025952717"
-const text = 'A text message sent using the Vonage SMS API'
-
-// A test SMS
-sendSMS(to, from, text);
-
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -32,4 +22,3 @@ app.get('/signup', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
-
