@@ -248,18 +248,18 @@ async function getInfo(userID) {
     console.log("Number match: " + numberMatch)
     let frequency;
     if (numberMatch) {
-      frequency = parseInt(numberMatch[0]); // change this
+      frequency = parseInt(numberMatch[0]) * 1440; // change this
       console.log("Frequency: " + frequency);
     }
     frequencies.push(frequency);
   }
   // test
-  const now = new Date();
-  endTimes[0] = now.setHours(now.getHours() + 24)
+  endTimes[0] = new Date(2024, 1, 24);
   console.log("endTimes[0]" + endTimes[0])
   // set notifications for each drug
   for (let i = 0; i < userDrug.drugs.length; i++) {
     if (!(frequencies === null || phoneNumber === null || endTimes === null)) {
+      console.log("endTimes[i]:" + endTimes[i])
       setNotificationPeriod(frequencies[i], drugNames[i], endTimes[i], phoneNumber, first_name)
     }
   }
