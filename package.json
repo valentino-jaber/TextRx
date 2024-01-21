@@ -4,6 +4,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@passageidentity/passage-js": "^3.13.0",
+    "@passageidentity/passage-node": "^2.9.0",
     "@vonage/server-sdk": "^3.12.1",
     "express": "^4.18.2"
   }
