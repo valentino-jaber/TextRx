@@ -2,12 +2,18 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Passage from '@passageidentity/passage-node';
+import userDrugManagerRouter from './routes/userDrugManager.js';
+import { sendSMS, sendNotification } from './smsService.js';
+
+
 
 // Construct __dirname equivalent in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 const port = 3000;
 
 let auth = false;
@@ -50,7 +56,6 @@ let passageAuthMiddleware = (() => {
       }
     } catch (e) {
       console.log(e);
-      res.render("unauthorized.hbs");
     }
   };
 })();
@@ -69,6 +74,19 @@ app.get("/dashboard.html", passageAuthMiddleware, async (req, res) => {
   // res.render("dashboard.hbs", { appID: process.env.PASSAGE_APP_ID });
   console.log("HERE");
   console.log(userIdentifier);
+
+  let contact = userIdentifier;
+  let phoneNum;
+  if (contact.includes("@")) {
+    console.log("email");
+  } else {
+    phoneNum = contact.replace(/\D/g, '');
+    console.log(phoneNum);
+    // sendSMS('17787918326', 'Hello from SMS service!');
+    // sendNotification("17787918326", "Please take some pills", 10000, 50000);
+  }
+
+
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
@@ -87,3 +105,29 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+//route for camera pages
+app.get('/camera', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/camera.html'));
+});
+
+app.use("/userDrugManager", userDrugManagerRouter);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+export default app;
+
