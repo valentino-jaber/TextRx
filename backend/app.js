@@ -221,6 +221,7 @@ async function getInfo(userID) {
   try {
     let user = await passage.user.get(userID);
     const full_name = user.user_metadata.full_name;
+    const phoneNumber = user.phone;
     const first_name = full_name.replace(/ .*/,'');
   } catch (error) {
     console.error('Error fetching user name:', error);
@@ -246,7 +247,6 @@ async function getInfo(userID) {
     }
     frequencies.push(frequency);
   }
-  const phoneNumber = "17789380866";
   // set notifications for each drug
   for (let i = 0; i < drugs.length; i++) {
     setNotificationPeriod(frequencies[i], drugNames[i], endTimes[i], phoneNumber, first_name)
