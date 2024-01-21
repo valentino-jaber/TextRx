@@ -16,6 +16,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
 let auth = false;
@@ -138,10 +140,24 @@ app.get('/api/getUserID', passageAuthMiddleware, async (req, res) => {
   }
 });
 
+app.get('/api/getInfo', passageAuthMiddleware, async (req, res) => {
+  try {
+    const userID = res.userID;
+    const user = await passage.user.get(userID);
+
+    // Assuming the user's name is stored in the 'name' property
+    const userName = user.id || "unknown user";
+
+    res.json({ name: userName, phoneNum: user.phone});
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Internal Server user.Error' });
+  }
+});
+
 // app.use('/api/getTableData', userDrugRouter);
 
 app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
-  console.log("getting table data lol");
   try {
     const userID = res.userID;
     const user = await passage.user.get(userID);
@@ -149,12 +165,9 @@ app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
     const userName = user.id 
     
     // const userDrugResponse = await fetch(`http://your-api-domain/api/userDrugManager?userId=${userName}`);
-    console.log(`http://localhost:3000/userDrugManager?userId=${userName}`);
     const userDrugResponse = await fetch(`http://localhost:3000/userDrugManager?userId=${userName}`);
     if (userDrugResponse.ok) {
       const userDrugData = await userDrugResponse.json();
-      console.log('User Drug Data:', userDrugData);
-
 
       // Return the combined data
       res.json(userDrugData);
@@ -164,6 +177,46 @@ app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
     }
   } catch (error) {
     console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/process-drug-deletion', passageAuthMiddleware, async (req, res) => {
+  try {
+    const drugName = req.body.drugName;
+    const userId = req.body.userId;
+    console.log("Drug name received for processing: " + drugName);
+    console.log("ID received for processing: " + userId);
+
+    // Prepare the data to send in the DELETE request
+    const data = {
+      userId: userId,
+      drugs: [drugName]
+    };
+
+    // Convert the data to a valid JSON string
+    const jsonData = JSON.stringify(data);
+
+    // Make a DELETE request to the other endpoint
+    const deleteResponse = await fetch('http://localhost:3000/userDrugManager/remove-all', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonData, // Send the JSON data in the body
+    });
+
+    if (deleteResponse.ok) {
+      const result = await deleteResponse.text();
+      console.log('Result:', result);
+      res.status(200).json({ message: 'Drug deleted successfully' });
+    } else {
+      console.error('Error in DELETE API call:', deleteResponse.status, deleteResponse.statusText);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+  } catch (error) {
+    console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

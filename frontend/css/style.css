@@ -284,3 +284,12 @@
     margin: 5px;
 
 }
+
+.hidden-data {
+    display: none;
+}
+
+/* Optionally, if you need to hide the corresponding header as well */
+th.hidden-header {
+    display: none;
+}
