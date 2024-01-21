@@ -24,6 +24,11 @@ app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
+// Route for signup page
+app.get('/camera', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/camera.html'));
+});
+
 app.use("/userDrugManager", userDrugManagerRouter);
 
 // catch 404 and forward to error handler
