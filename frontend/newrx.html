@@ -227,15 +227,46 @@
             <div id="sliders-container" style="display: none; text-align: center;">
                 <div>
                     <label for="quantity-slider">Quantity:</label>
-                    <span id="quantity-values" class="slider-values"></span>
-                    <input type="range" id="quantity-slider" min="10" max="150" value="50">
+                    <span id="quantity-values" class="slider-values">30 tabs</span>
+                    <input type="range" id="quantity-slider" min="10" max="150" value="30">
                 </div>
+                
+                <script>
+                    // Get the elements
+                    var quantitySlider = document.getElementById('quantity-slider');
+                    var quantityValues = document.getElementById('quantity-values');
+                
+                    // Set the initial value
+                    quantityValues.textContent = '(' + quantitySlider.value + ' tabs)';
+                
+                    // Add an event listener to update the display dynamically
+                    quantitySlider.addEventListener('input', function () {
+                        quantityValues.textContent = '(' + this.value + ' tabs)';
+                    });
+                </script>
+                
+                
 
                 <div>
                     <label for="dosage-slider">Dosage:</label>
-                    <span id="dosage-values" class="slider-values"></span>
-                    <input type="range" id="dosage-slider" min="1" max="8" value="2">
+                    <span id="dosage-values" class="slider-values">(1 tab/Day)</span>
+                    <input type="range" id="dosage-slider" min="1" max="8" value="1">
                 </div>
+                
+                <script>
+                    // Get the elements
+                    var dosageSlider = document.getElementById('dosage-slider');
+                    var dosageValues = document.getElementById('dosage-values');
+                
+                    // Set the initial value
+                    dosageValues.textContent = '(' + dosageSlider.value + ' tabs / Day)';
+                
+                    // Add an event listener to update the display dynamically
+                    dosageSlider.addEventListener('input', function () {
+                        dosageValues.textContent = '(' + this.value + ' tabs)';
+                    });
+                </script>
+                
 
                 <div>
                     <label for="expiry-date">Expiry Date:</label>
@@ -308,7 +339,18 @@
                                                 document.getElementById('dosage-values').textContent = `(${dosageValue} Tabs/Day)`;
                                             }
 
-                                            document.getElementById('submit-button').addEventListener('click', function () {
+                                            document.getElementById('submit-button').addEventListener('click', async () => {
+
+                                                console.log("clicked:");
+
+                                                
+                                                const response = await fetch('/api/getUserID'); 
+                                                const data = await response.json();
+                                                const userId = data.name;
+                                                // console.log("USER1: " + data.name);
+
+                                                
+
                                                 // Retrieve values from sliders
                                                 var quantityValue = document.getElementById('quantity-slider').value;
                                                 var dosageValue = document.getElementById('dosage-slider').value;
@@ -317,7 +359,7 @@
                                                 var matchingSubstring = document.getElementById('matching-substring').textContent.replace('Drug Detected: ', '');
 
                                                 // Retrieve user ID
-                                                var userId = 'big bro';
+                                                
 
                                                 // Retrieve expiry date
                                                 var expiryValue = document.getElementById('expiry-date').value;
@@ -341,7 +383,7 @@
                                                 })
                                                 .then(response => response.json())
                                                 .then(data => {
-                                                    console.log('Success:', data);
+                                                    console.log('Success:');
                                                     // You can handle the response from the server here if needed
                                                 })
                                                 .catch(error => {

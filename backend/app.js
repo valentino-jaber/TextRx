@@ -110,6 +110,21 @@ app.get('/api/getUserName', passageAuthMiddleware, async (req, res) => {
   }
 });
 
+app.get('/api/getUserID', passageAuthMiddleware, async (req, res) => {
+  try {
+    const userID = res.userID;
+    const user = await passage.user.get(userID);
+
+    // Assuming the user's name is stored in the 'name' property
+    const userName = user.id || "unknown user";
+
+    res.json({ name: userName });
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 
