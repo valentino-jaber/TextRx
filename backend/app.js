@@ -102,7 +102,7 @@ app.get('/api/getUserName', passageAuthMiddleware, async (req, res) => {
     const user = await passage.user.get(userID);
 
     // Assuming the user's name is stored in the 'name' property
-    const userName = user.user_metadata.full_name || user.email || user.phone;
+    const userName = user.user_metadata.full_name || "User";
 
     res.json({ name: userName });
   } catch (error) {
