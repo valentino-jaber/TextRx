@@ -1,5 +1,3 @@
-import { Models as dbModels, Functions as dbFunctions } from "./utils/db.js";
-
 import { Vonage } from '@vonage/server-sdk';
 import schedule from 'node-schedule';
 
@@ -10,10 +8,8 @@ const vonage = new Vonage({
 
 const from = "19025952717"
 
-// Defines a day period
-/*
-const start = 
-const end =*/
+// this frequency works for demo purposes (30 second interval)
+const demo = 1440; 
 
 export async function sendSMS(to, text) {
     await vonage.sms.send({to, from, text})
@@ -31,7 +27,8 @@ export async function sendSMS(to, text) {
 }*/
 
 function sendNotification(phoneNumber, text, time, endTime) {
-  
+
+  // console.log("endTime at sendnotif funct" + endTime)
   const job = schedule.scheduleJob(time, function() {
     if (time.getTime() > endTime.getTime()) {
       console.log("Current time" + time + "is after finishing time" + endTime);
@@ -45,6 +42,9 @@ function sendNotification(phoneNumber, text, time, endTime) {
 // functions to generate array of notification times
 function incrementSeconds(frequency, reminder, times, interval) {
   const SECOND = 1000;
+  console.log("Frequency:" + frequency)
+  console.log("Interval" + interval)
+  console.log("Reminder:" + reminder)
   for (let i = 0; i < frequency; i++) {
     reminder.setTime(reminder.getTime() + interval * SECOND)
     times.push(new Date(reminder))
@@ -65,16 +65,14 @@ function incrementHours(frequency, reminder, times, interval) {
   }
 }
 
-// called each time a new prescription is added
-export function setNotificationPeriod() {
-  // values will be taken from db
-  const frequency = 5000;
-  const drugName = "Advil";
+// called for each prescription
+export function setNotificationPeriod(frequency, drugName, endTime, phoneNumber, username) {
+  // console.log("endTime" + endTime)
+  // for demo purposes
+  frequency = demo  
   let times = [];
-  let endTime = new Date();
-  endTime.setHours(endTime.getHours(endTime) + 24);
-  const phoneNumber = "17789380866";
-  const text = "Medication Reminder!\n \nTime for your " + drugName + ".\n \nStay healthy!";
+  // const phoneNumber = "17789380866";
+  const text = "Hello " + username + "!\n \nTime for your " + drugName + "!\n \nStay healthy!";
   let reminder = new Date();
   // starting time set to 8 am
   reminder.setHours(8, 0, 0, 0);
