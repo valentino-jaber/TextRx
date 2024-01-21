@@ -118,7 +118,7 @@ router.put('/remove-one', async (req, res) => {
         
       }
 
-      dbFunctions.dbUpdateMany(dbModels.UserDrugCollection, {}, { $pull: { drugs: { quantity: 0 } } });
+      await dbFunctions.dbUpdateMany(dbModels.UserDrugCollection, {}, { $pull: { drugs: { quantity: 0 } } });
   
       res.status(200).send("Successfully updated the database");
       return;
@@ -127,8 +127,17 @@ router.put('/remove-one', async (req, res) => {
   
 
 // DELETE
-// router.delete('remove-all', async (req, res) => {
+router.delete('/remove-all', async (req, res) => {
+    const userId = req.body.userId;
+    let inputDrugs = req.body.drugs;
 
-// });
+    for (const inputDrug of inputDrugs) {
+        console.log(inputDrug);
+        await dbFunctions.dbUpdateOne(dbModels.UserDrugCollection, {userId}, { $pull: { drugs: { drugName: inputDrug } } });
+    }
+
+    res.status(200).send("Sucessfully updated the database");
+    return;
+});
 
 module.exports = router;
