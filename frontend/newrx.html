@@ -80,20 +80,31 @@
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
-                        <span>Admin</span>
+                        <h6 class="mb-0" id="userName">Loading...</h6>
+                        <span>Admin dashboard</span>
                     </div>
+                      
+                    <script>
+                        // Assume you have a function to fetch the user's name from the backend
+                        async function fetchUserName() {
+                          try {
+                            const response = await fetch('/api/getUserName'); // Replace with your actual backend endpoint
+                            const data = await response.json();
+                            document.getElementById('userName').textContent = data.name;
+                          } catch (error) {
+                            console.error('Error fetching user name:', error);
+                          }
+                        }
+                      
+                        // Call the function when the page loads
+                        window.onload = fetchUserName;
+                    </script>
                 </div>
                 <div class="navbar-nav w-100">
-                    <a href="index.html" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-laptop me-2"></i>Elements</a>
-                        <div class="dropdown-menu bg-transparent border-0">
-                            <a href="button.html" class="dropdown-item">Buttons</a>
-                            <a href="typography.html" class="dropdown-item">Typography</a>
-                            <a href="element.html" class="dropdown-item">Other Elements</a>
-                        </div>
-                    </div>
+                    <a href="dashboard.html" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    <a href="newrx.html" class="nav-item nav-link active"><i class="fa fa-th me-2"></i>Add New Rx</a>
+                    <a href="myrxs.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>See My Rxs</a>
+                    <a href="" class="nav-item nav-link"><i class="fa fa-th me-2"></i></a>
                     <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>
                     <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>
                     <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>
