@@ -36,6 +36,11 @@ const dbFindRecord = async (model, filter) => {
     let record = await model.updateOne(filter, update);
     return record;
   }
+
+  const dbUpdateMany = async (model, filter, update) => {
+      let record = await model.updateMany(filter, update);
+      return record;
+  }
   
   const dbSaveRecord = async (record) => {
     await record.save();
@@ -50,6 +55,6 @@ module.exports = {
         UserDrugCollection
     },
     Functions: {
-        dbFindRecord, dbFindAllRecords, dbUpdateOne, dbSaveRecord, dbDeleteRecord
+        dbFindRecord, dbFindAllRecords, dbUpdateOne, dbUpdateMany, dbSaveRecord, dbDeleteRecord
     }
 };
