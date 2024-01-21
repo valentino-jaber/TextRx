@@ -13,4 +13,15 @@ async function sendSMS(to, text) {
         .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });
 }
 
-module.exports = sendSMS;
+async function sendNotification(phoneNumber, text, interval, stopAfterDuration, ) {
+  const timerId = setInterval(() => sendSMS(phoneNumber, text), interval);
+  setTimeout(() => {
+    clearInterval(timerId);
+    console.log('Notification interval stopped.');
+  }, stopAfterDuration); 
+  setTimeout(() => clearInterval(timerId), stopAfterDuration); 
+}
+
+module.exports = {
+  sendNotification,
+};

@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const userDrugManagerRouter = require("./routes/userDrugManager.js");
 
+const smsService = require('./smsService.js');
+
 const app = express();
 const port = 3000;
 
@@ -43,3 +45,5 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+smsService.sendNotification("17789380866", "Please take your pills", 10000, 50000);
