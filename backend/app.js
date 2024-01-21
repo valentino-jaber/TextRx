@@ -103,6 +103,12 @@ app.get('/dashboard', (req, res) => {
     auth = true;
 });
 
+app.get('/pharmbot', (req, res) => {
+  console.log("authed");
+  res.sendFile(path.join(__dirname, '../frontend/pharmbot.html'));
+  auth = true;
+});
+
 app.get('/api/getUserName', passageAuthMiddleware, async (req, res) => {
   try {
     const userID = res.userID;
