@@ -1,6 +1,6 @@
 /********** Template CSS **********/
 :root {
-    --primary: #009CFF;
+    --primary: #6fb3f7;
     --light: #F3F6F9;
     --dark: #191C24;
 }
@@ -274,4 +274,13 @@
 .testimonial-carousel .owl-dot.active {
     background: var(--dark);
     border-color: var(--primary);
+}
+
+#camera-stream {
+    width: 97%; /* Responsive width */
+    max-width: 600px; /* Max width - adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 20px; /* Rounded edges - adjust radius as needed */
+    margin: 5px;
+
 }

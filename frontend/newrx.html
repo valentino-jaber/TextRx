@@ -127,8 +127,9 @@
         <div class="content">
             <!-- Navbar Start -->
             <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
-                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
-                    <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2>
+                <a href="dashboard.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <!-- <h2 class="text-primary mb-0"><i class="fa fa-hashtag"></i></h2> -->
+                    <img class="rounded-circle" src="img/TRXLOGO copy.png" alt="" style="width: 40px; height: 40px;">
                 </a>
                 <a href="#" class="sidebar-toggler flex-shrink-0">
                     <i class="fa fa-bars"></i>
@@ -212,8 +213,13 @@
             </nav>
             <!-- Navbar End -->
 
-            <h1 style="text-align: center;">Prescription Detection</h1>
-            <h3 style="text-align: center;">Hover the label over the camera!</h3>
+            <!-- <h1 style="text-align: center;">Prescription Detection</h1> -->
+
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-lg btn-primary m-2">Prescription Detection</button>
+              </div>
+
+            <h4 style="text-align: center;">Hover the label over the camera!</h4>
             
             <video id="camera-stream" autoplay></video>
             
@@ -267,6 +273,7 @@
                     });
                 </script>
                 
+                
 
                 <div>
                     <label for="expiry-date">Expiry Date:</label>
@@ -274,7 +281,9 @@
                 </div>
 
                 <button id="submit-button">Update Prescription</button>
+                
             </div>
+            
             
             <script>
                 // Request access to the camera
@@ -402,7 +411,9 @@
                         console.error('Error accessing the camera:', error);
                     });
             </script>
+            
         </div>
+        
         <!-- Content End -->
 
 
