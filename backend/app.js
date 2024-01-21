@@ -129,4 +129,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// smsService.sendNotification("17789380866", "Please take some pills", 10000, 50000);
 export default app;
