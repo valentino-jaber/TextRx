@@ -27,7 +27,7 @@ app.get('/:page(index|)', (req, res) => {
     res.redirect('/signin.html');
   } else {
     console.log("authed");
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
     auth = true;
   }
 });
@@ -86,8 +86,7 @@ app.get("/dashboard.html", passageAuthMiddleware, async (req, res) => {
     // sendNotification("17787918326", "Please take some pills", 10000, 50000);
   }
 
-
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
 });
 
 app.get('/dashboard', (req, res) => {
