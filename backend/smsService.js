@@ -1,5 +1,3 @@
-import { Models as dbModels, Functions as dbFunctions } from "./utils/db.js";
-
 import { Vonage } from '@vonage/server-sdk';
 import schedule from 'node-schedule';
 
@@ -9,11 +7,6 @@ const vonage = new Vonage({
 })
 
 const from = "19025952717"
-
-// Defines a day period
-/*
-const start = 
-const end =*/
 
 export async function sendSMS(to, text) {
     await vonage.sms.send({to, from, text})
@@ -65,16 +58,11 @@ function incrementHours(frequency, reminder, times, interval) {
   }
 }
 
-// called each time a new prescription is added
-export function setNotificationPeriod() {
-  // values will be taken from db
-  const frequency = 5000;
-  const drugName = "Advil";
+// called for each prescription
+export function setNotificationPeriod(frequency, drugName, endTime, phoneNumber, username) {
   let times = [];
-  let endTime = new Date();
-  endTime.setHours(endTime.getHours(endTime) + 24);
-  const phoneNumber = "17789380866";
-  const text = "Medication Reminder!\n \nTime for your " + drugName + ".\n \nStay healthy!";
+  // const phoneNumber = "17789380866";
+  const text = "Hello" + username + "!\n \nTime for your " + drugName + ".\n \nStay healthy!";
   let reminder = new Date();
   // starting time set to 8 am
   reminder.setHours(8, 0, 0, 0);
