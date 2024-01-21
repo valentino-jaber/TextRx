@@ -11,12 +11,16 @@
     "url": "git+https://github.com/valentino-jaber/TextRx.git"
   },
   "author": "",
+  "type":"module",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/valentino-jaber/TextRx/issues"
   },
   "homepage": "https://github.com/valentino-jaber/TextRx#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "@passageidentity/passage-js": "^3.13.0",
+    "@passageidentity/passage-node": "^2.9.0",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3"
   }
 }
