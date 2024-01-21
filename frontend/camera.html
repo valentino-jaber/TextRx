@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drug Detector</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        #camera-stream {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+
+    <!-- v5 -->
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+
+</head>
+<body>
+    <h1 style="text-align: center;">Drug Detector</h1>
+    <h3 style="text-align: center;">Take a photo of your drug label!</h3>
+    
+    <video id="camera-stream" autoplay></video>
+    
+    <canvas id="photo-canvas" style="display: none;"></canvas>
+    
+    <div id="matching-substring" style="text-align: center;"></div>
+    
+    <script>
+        // Request access to the camera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var videoElement = document.getElementById('camera-stream');
+                videoElement.srcObject = stream;
+                
+                // Capture photo every 5 seconds
+                var intervalId = setInterval(function() {
+                    var canvasElement = document.getElementById('photo-canvas');
+                    var context = canvasElement.getContext('2d');
+                    
+                    // Set the canvas size to match the video stream
+                    canvasElement.width = videoElement.videoWidth;
+                    canvasElement.height = videoElement.videoHeight;
+                    
+                    // Draw the current video frame onto the canvas
+                    context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+                    
+                    // Get the image data from the canvas
+                    var imageData = canvasElement.toDataURL('image/png');
+
+                     // Use Tesseract.js to perform OCR on the image data
+                     Tesseract.recognize(
+                        imageData,
+                        'eng', // Specify language ('eng' for English)
+                        { logger: info => console.log(info)}
+                    ).then(({ data: { text } }) => {
+                        fetch('/static/drug.names.csv')
+                            .then(response => response.text())
+                            .then(csvData => {
+                                var drugNames = csvData.split('\n');
+                                var found = false;
+                                var matchingSubstring = '';
+                                var cleanedString = String(text.replace(/[^a-zA-Z]/g, ''));
+                                console.log(cleanedString);
+                                if (cleanedString.includes('Methylphenidate')) {
+                                        console.log('found');
+                                }
+                                for (var i = 0; i < drugNames.length; i++) {
+                                    var temp = String(drugNames[i]);
+                                    temp = temp.replace(/[^a-zA-Z]/g, '');
+                                    if (cleanedString.includes(temp)) {
+                                        console.log(temp);
+                                        found = true;
+                                        matchingSubstring = drugNames[i];
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    document.getElementById('matching-substring').textContent = 'Drug Detected: ' + matchingSubstring;
+                                    clearInterval(intervalId); // Stop the interval looping
+                                }
+                            })
+                            .catch(error => console.error('Error fetching drug detection model', error));
+                    });
+                }, 1000);
+            })
+            .catch(function(error) {
+                console.error('Error accessing the camera:', error);
+            });
+    </script>
+</body>
+</html>
+

@@ -1,9 +1,14 @@
-const express = require('express');
-var router = express.Router();
-var dbModels = require("../utils/db.js").Models;
-var dbFunctions = require("../utils/db.js").Functions;
-const bodyParser = require('body-parser');
-var url = require('url');
+import express from 'express';
+import { Models as dbModels, Functions as dbFunctions } from "../utils/db.js";
+import bodyParser from 'body-parser';
+import url from 'url';
+
+const router = express.Router();
+const { json, urlencoded } = bodyParser;
+
+// Use json and urlencoded middlewares from bodyParser
+router.use(json());
+router.use(urlencoded({ extended: true }));
 
 // Use body-parser middleware to parse request bodies
 router.use(bodyParser.json())
@@ -124,7 +129,6 @@ router.put('/remove-one', async (req, res) => {
       return;
   
   });
-  
 
 // DELETE
 router.delete('/remove-all', async (req, res) => {
@@ -140,4 +144,4 @@ router.delete('/remove-all', async (req, res) => {
     return;
 });
 
-module.exports = router;
+export default router;
