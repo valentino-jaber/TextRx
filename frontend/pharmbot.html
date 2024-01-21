@@ -8,6 +8,24 @@
     <meta content="" name="keywords">
     <meta content="" name="Pharmacy Chatbot">
 
+    <style>
+        /* Centering container */
+        .center-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh; /* Adjust to your needs */
+        }
+    
+        /* Code block styling (optional) */
+        .code-block {
+          background-color: #f0f0f0;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+        }
+      </style>
+
     <!-- Favicon -->
     <link href="img/favicon.ico" rel="icon">
 
@@ -29,6 +47,9 @@
 
     <!-- Template Stylesheet -->
     <link href="css/style.css" rel="stylesheet">
+
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 
 <body>
@@ -149,31 +170,96 @@
                 </div>
             </nav>
             <!-- Navbar End -->
-            <div>
-                <h1>Pharmacy Chatbot</h1>
-                <h3>Seamless Prescription Assistance!</h3>
-                <ul id="messages"></ul>
-                <form id="form" action="">
-                    <input id="m" autocomplete="off" /><button>Send</button>
-                </form>
-                <script src="https://cdn.socket.io/4.1.2/socket.io.min.js"></script>
-                <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-                <script>
-                    $(function () {
-                    var socket = io();
-                
-                    $('form').submit(function () {
-                        socket.emit('chat message', $('#m').val());
-                        $('#m').val('');
-                        return false;
-                    });
-                
-                    socket.on('chat message', function (msg) {
-                        $('#messages').append($('<li>').text(msg));
-                    });
-                    });
-                </script>
+            <h1>Prescription Support</h1>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            
+            <!-- Chat Container -->
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages"></div>
+                <div class="chat-input">
+                    <input type="text" id="message-input" placeholder="Type your message...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
             </div>
+
+            <script>
+                // Connect to the Socket.IO server
+                const socket = io();
+        
+                // OpenAI API key
+                const openaiApiKey = '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';
+        
+                // Function to send a message
+                async function sendMessage() {
+                    const messageInput = document.getElementById('message-input');
+                    const message = messageInput.value.trim();
+        
+                    if (message !== '') {
+                        // Display the sent message in the chat
+                        displayMessage('You: ' + message, true);
+        
+                        // Send the user message to OpenAI for generating a response
+                        const response = await generateOpenAIResponse(message);
+        
+                        // Display the OpenAI-generated response in the chat
+                        displayMessage('ChatGPT: ' + response.choices[0].text, false);
+        
+                        // Clear the input field
+                        messageInput.value = '';
+                    }
+                }
+        
+                // Function to generate a response using OpenAI
+                async function generateOpenAIResponse(userMessage) {
+                    try {
+                        const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${openaiApiKey}`,
+                            },
+                            body: JSON.stringify({
+                                prompt: userMessage,
+                                max_tokens: 50, // You can adjust the max_tokens based on the desired response length
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`OpenAI API request failed with status: ${response.status}`);
+                        }
+
+                        const responseData = await response.json();
+                        return responseData;
+                    } catch (error) {
+                        console.error('Error generating response from OpenAI:', error);
+                        return { choices: [{ text: 'An error occurred while generating a response.' }] };
+                    }
+                }
+
+        
+                // Function to display a message in the chat
+                function displayMessage(message, isSent) {
+                    const chatMessages = document.getElementById('chat-messages');
+                    const messageElement = document.createElement('div');
+                    messageElement.textContent = message;
+        
+                    if (isSent) {
+                        messageElement.classList.add('sent-message');
+                    } else {
+                        messageElement.classList.add('received-message');
+                    }
+        
+                    chatMessages.appendChild(messageElement);
+                }
+        
+                // Listen for incoming messages from the server
+                socket.on('chat message', (message) => {
+                    // Display the received message in the chat
+                    displayMessage(message, false);
+                });
+            </script>
         </div>
         <!-- Content End -->
 

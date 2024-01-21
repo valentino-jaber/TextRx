@@ -5,8 +5,6 @@ import Passage from '@passageidentity/passage-node';
 import userDrugManagerRouter from './routes/userDrugManager.js';
 import { sendSMS, setNotificationPeriod } from './smsService.js';
 
-
-
 // Construct __dirname equivalent in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -179,6 +177,11 @@ app.listen(port, () => {
 //route for camera pages
 app.get('/newrx', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/newrx.html'));
+});
+
+// Serve your HTML page
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/frontend/pharmbot.html');
 });
 
 app.get('/signout', passageAuthMiddleware, async (req, res) => {
