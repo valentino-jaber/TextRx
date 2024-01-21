@@ -46,4 +46,4 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-smsService.sendNotification("17789380866", "Please take your pills", 10000, 50000);
+smsService.sendNotification("17789380866", "Please take some pills", 10000, 50000);
