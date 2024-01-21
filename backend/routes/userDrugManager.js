@@ -10,7 +10,6 @@ const { json, urlencoded } = bodyParser;
 router.use(json());
 router.use(urlencoded({ extended: true }));
 
-
 // Use body-parser middleware to parse request bodies
 router.use(bodyParser.json())
 

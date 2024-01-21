@@ -18,6 +18,7 @@ const UserDrugCollection = mongoose.model('user_drug_collection', userDrugs);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
+
 db.once('open', function () {
     console.log("We're connected to MongoDB!");
 });

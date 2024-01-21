@@ -19,12 +19,13 @@ const sendSMS = async (to, text) => {
 };
 
 const sendNotification = async (phoneNumber, text, interval, stopAfterDuration) => {
+
   const timerId = setInterval(() => sendSMS(phoneNumber, text), interval);
   setTimeout(() => {
     clearInterval(timerId);
     console.log('Notification interval stopped.');
-  }, stopAfterDuration);
-  setTimeout(() => clearInterval(timerId), stopAfterDuration);
-};
+  }, stopAfterDuration); 
+  setTimeout(() => clearInterval(timerId), stopAfterDuration); 
+}
 
 export { sendSMS, sendNotification };
