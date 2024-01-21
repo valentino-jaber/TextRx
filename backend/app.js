@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Passage from '@passageidentity/passage-node';
 import userDrugManagerRouter from './routes/userDrugManager.js';
-import { sendSMS, sendNotification } from './smsService.js';
+import { sendSMS, setNotificationPeriod } from './smsService.js';
 
 
 
@@ -39,6 +39,12 @@ app.get('/signin.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/signin.html'));
 });
 
+// Route for /profile.html
+app.get('/profile', (req, res) => {
+  console.log("Accessed /profile.html");
+  res.sendFile(path.join(__dirname, '../frontend/profile.html'));
+  auth = true;
+});
 
 app.use("/userDrugManager", userDrugManagerRouter);
 
@@ -136,7 +142,6 @@ app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
     const user = await passage.user.get(userID);
 
     const userName = user.id 
-
     
     // const userDrugResponse = await fetch(`http://your-api-domain/api/userDrugManager?userId=${userName}`);
     console.log(`http://localhost:3000/userDrugManager?userId=${userName}`);
@@ -158,9 +163,6 @@ app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
   }
 });
 
-
-
-
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -173,8 +175,23 @@ app.get('/newrx', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/newrx.html'));
 });
 
-// app.use("/userDrugManager", userDrugManagerRouter);
+app.get('/signout', passageAuthMiddleware, async (req, res) => {
+  try {
+    console.log('Before sign out');
+    const user = res.userID;
 
+    passage.user.signOut(user);
+
+    console.log('After sign out');
+
+    // Redirect to the sign-in page or any other appropriate page after signing out
+    res.redirect('/signin.html');
+  } catch (error) {
+    console.error('Error during sign-out:', error);
+    // Handle the error appropriately, e.g., redirect to an error page
+    res.redirect('/error.html');
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -184,6 +201,8 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+
+  console.error(err);
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
