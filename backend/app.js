@@ -5,6 +5,8 @@ import Passage from '@passageidentity/passage-node';
 import userDrugManagerRouter from './routes/userDrugManager.js';
 import { sendSMS, setNotificationPeriod} from './smsService.js';
 import { Models as dbModels, Functions as dbFunctions } from "./utils/db.js";
+import bodyParser from 'body-parser';
+
 const { UserDrugCollection } = dbModels;
 
 

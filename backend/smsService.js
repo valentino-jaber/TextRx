@@ -8,7 +8,7 @@ const vonage = new Vonage({
 
 const from = "19025952717"
 
-// multiply frequency by this amount for demo purposes
+// this frequency works for demo purposes (30 second interval)
 const demo = 1440; 
 
 export async function sendSMS(to, text) {
@@ -69,7 +69,7 @@ function incrementHours(frequency, reminder, times, interval) {
 export function setNotificationPeriod(frequency, drugName, endTime, phoneNumber, username) {
   // console.log("endTime" + endTime)
   // for demo purposes
-  frequency *= demo  
+  frequency = demo  
   let times = [];
   // const phoneNumber = "17789380866";
   const text = "Hello " + username + "!\n \nTime for your " + drugName + "!\n \nStay healthy!";
