@@ -1,19 +1,25 @@
-const { Vonage } = require('@vonage/server-sdk')
+import { Vonage } from '@vonage/server-sdk';
 
 const vonage = new Vonage({
   apiKey: "aca7d292",
   apiSecret: "YPq9g2gmPs3tcCXI"
-})
+});
 
-const from = "19025952717"
+const from = "19025952717";
 
-async function sendSMS(to, text) {
-    await vonage.sms.send({to, from, text})
-        .then(resp => { console.log('Message sent successfully'); console.log(resp); })
-        .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });
-}
+const sendSMS = async (to, text) => {
+  try {
+    const response = await vonage.message.sendSms(from, to, text);
+    console.log('Message sent successfully');
+    console.log(response);
+  } catch (error) {
+    console.error('There was an error sending the messages.');
+    console.error(error);
+  }
+};
 
-async function sendNotification(phoneNumber, text, interval, stopAfterDuration, ) {
+const sendNotification = async (phoneNumber, text, interval, stopAfterDuration) => {
+
   const timerId = setInterval(() => sendSMS(phoneNumber, text), interval);
   setTimeout(() => {
     clearInterval(timerId);
@@ -22,6 +28,4 @@ async function sendNotification(phoneNumber, text, interval, stopAfterDuration, 
   setTimeout(() => clearInterval(timerId), stopAfterDuration); 
 }
 
-module.exports = {
-  sendNotification,
-};
+export { sendSMS, sendNotification };
