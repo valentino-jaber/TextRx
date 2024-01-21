@@ -15,7 +15,7 @@ const from = "19025952717"
 const start = 
 const end =*/
 
-async function sendSMS(to, text) {
+export async function sendSMS(to, text) {
     await vonage.sms.send({to, from, text})
         .then(resp => { console.log('Message sent successfully'); console.log(resp); })
         .catch(err => { console.log('There was an error sending the messages.'); console.error(err); });
