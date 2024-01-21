@@ -3,8 +3,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Passage from '@passageidentity/passage-node';
 import userDrugManagerRouter from './routes/userDrugManager.js';
-import { sendSMS, setNotificationPeriod } from './smsService.js';
+import { sendSMS, setNotificationPeriod} from './smsService.js';
+import { Models as dbModels, Functions as dbFunctions } from "./utils/db.js";
 import bodyParser from 'body-parser';
+
+const { UserDrugCollection } = dbModels;
+
 
 
 // Construct __dirname equivalent in ES module
@@ -74,6 +78,8 @@ app.get("/dashboard.html", passageAuthMiddleware, async (req, res) => {
   console.log("Accessed /index.html");
   let userID = res.userID;
   let user = await passage.user.get(userID);
+  // Assuming the user's name is stored in the 'name' property
+  const userName = user.id || "unknown user";
 
   let userIdentifier;
   if (user.email) {
@@ -95,8 +101,9 @@ app.get("/dashboard.html", passageAuthMiddleware, async (req, res) => {
     // sendSMS('17787918326', 'Hello from SMS service!');
     // sendNotification("17787918326", "Please take some pills", 10000, 50000);
   }
-
+ 
   res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
+  await getInfo(userID);
 });
 
 app.get('/dashboard', (req, res) => {
@@ -131,7 +138,7 @@ app.get('/api/getUserID', passageAuthMiddleware, async (req, res) => {
     res.json({ name: userName });
   } catch (error) {
     console.error('Error fetching user data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server user.Error' });
   }
 });
 
@@ -146,13 +153,11 @@ app.get('/api/getInfo', passageAuthMiddleware, async (req, res) => {
     res.json({ name: userName, phoneNum: user.phone});
   } catch (error) {
     console.error('Error fetching user data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Internal Server user.Error' });
   }
 });
 
-
-
-
+// app.use('/api/getTableData', userDrugRouter);
 
 app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
   try {
@@ -248,6 +253,7 @@ app.get('/signout', passageAuthMiddleware, async (req, res) => {
   }
 });
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -266,5 +272,50 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// smsService.sendNotification("17789380866", "Please take some pills", 10000, 50000);
+async function getInfo(userID) {
+  let userDrug
+  let phoneNumber
+  let first_name
+  try {
+    let user = await passage.user.get(userID);
+    const full_name = user.user_metadata.full_name;
+    phoneNumber = user.phone;
+    first_name = full_name.replace(/ .*/,'');
+  } catch (error) {
+    console.error('Error fetching user name:', error);
+  }
+  const filter = { userId: userID };
+  userDrug = await dbFunctions.dbFindRecord(UserDrugCollection, filter);
+  if (!userDrug) {
+    console.log('Record not found.');
+  }
+  else if (userDrug.drugs === null) {
+    console.log("no drugs")
+  }
+  else {
+  let drugNames = []
+  let endTimes = []
+  let frequencies = []
+  for (let i = 0; i < userDrug.drugs.length; i++) {
+    drugNames.push(userDrug.drugs[i].drugName);
+    endTimes.push(userDrug.drugs[i].expiryDate);
+    let numberMatch = userDrug.drugs[i].instruction.match(/\d+/);
+    // console.log("Number match: " + numberMatch)
+    let frequency;
+    if (numberMatch) {
+      frequency = parseInt(numberMatch[0]); 
+    }
+    frequencies.push(frequency);
+  }
+  // test
+  // endTimes[0] = new Date(2024, 1, 24
+  // set notifications for each drug
+  for (let i = 0; i < userDrug.drugs.length; i++) {
+    if (!(frequencies.includes(null) || phoneNumber === null || endTimes.includes(null))) {
+      setNotificationPeriod(frequencies[i], drugNames[i], endTimes[i], phoneNumber, first_name)
+    }
+  }
+  }
+}
+
 export default app;
