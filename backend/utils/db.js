@@ -39,12 +39,12 @@ export const dbUpdateOne = async (model, filter, update) => {
     return record;
 }
 
-const dbUpdateMany = async (model, filter, update) => {
+export const dbUpdateMany = async (model, filter, update) => {
     let record = await model.updateMany(filter, update);
     return record;
 }
   
-const dbSaveRecord = async (record) => {
+export const dbSaveRecord = async (record) => {
     await record.save();
 };
 
@@ -52,11 +52,10 @@ export const dbDeleteRecord = async (record) => {
     await record.deleteOne();
 };
 
-module.exports = {
-    Models: {
-        UserDrugCollection
-    },
-    Functions: {
-        dbFindRecord, dbFindAllRecords, dbUpdateOne, dbUpdateMany, dbSaveRecord, dbDeleteRecord
-    }
+export const Models = {
+    UserDrugCollection
+};
+
+export const Functions = {
+    dbFindRecord, dbFindAllRecords, dbUpdateOne, dbUpdateMany, dbSaveRecord, dbDeleteRecord
 };
