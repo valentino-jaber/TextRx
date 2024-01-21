@@ -277,11 +277,12 @@
 }
 
 #camera-stream {
-    width: 97%; /* Responsive width */
-    max-width: 600px; /* Max width - adjust as needed */
+    width: 77%; /* Responsive width */
+    max-width: 400px; /* Max width - adjust as needed */
     height: auto; /* Maintain aspect ratio */
     border-radius: 20px; /* Rounded edges - adjust radius as needed */
     margin: 5px;
+    
 
 }
 
@@ -292,4 +293,15 @@
 /* Optionally, if you need to hide the corresponding header as well */
 th.hidden-header {
     display: none;
+}
+
+
+h3 { 
+    display: block;
+    font-size: 1.17em;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
 }

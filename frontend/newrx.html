@@ -170,12 +170,13 @@
 
             <!-- <h1 style="text-align: center;">Prescription Detection</h1> -->
             
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-lg btn-primary m-2">Prescription Detection</button>
+            <div class="d-flex justify-content-center" style="margin-top: 6px;">
+                <button type="button" style="background-color: rgb(65, 170, 208);" class="btn btn-lg btn-primary m-2" >Prescription Detection</button>
               </div>
+              
 
             <div class="d-flex justify-content-center">
-                <h4 style="text-align: center;">Hover the label over the camera!</h4>
+                <h3 id="instructions" style="text-align: center;">Hover the label over the camera!</h3>
             </div>
             
             <div class="d-flex justify-content-center">
@@ -239,7 +240,9 @@
                     <input type="date" id="expiry-date" required>
                 </div>
 
-                <button id="submit-button">Update Prescription</button>
+                <!-- <button id="submit-button">Update Prescription</button>
+                <button type="button" class="btn btn-lg btn-primary m-2">Large Button (btn-lg)</button> -->
+                <button type="button" class="btn btn-sm btn-primary m-2" id="submit-button">Update Prescription</button>
                 
             </div>
             
@@ -350,12 +353,25 @@
                                                 })
                                                 .then(response => response.json())
                                                 .then(data => {
-                                                    console.log('Success:');
+                                                    
+                                                    console.log("reroute");
+                                                    window.location.href = '../frontend/dashboard.html';
+                                                    window.location.replace('/dashboard.html');
+                                                    window.location.assign('/dashboard.html');
+
+
+
+                                                    
+
                                                     // You can handle the response from the server here if needed
                                                 })
                                                 .catch(error => {
                                                     console.error('Error:', error);
                                                     // Handle errors here
+                                                    console.log("reroute");
+                                                    window.location.href = '../frontend/dashboard.html';
+                                                    window.location.replace('/dashboard.html');
+                                                    window.location.assign('/dashboard.html');
                                                 });
                                             });
 

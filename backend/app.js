@@ -34,6 +34,7 @@ app.get('/:page(index|)', (req, res) => {
   }
 });
 
+
 // Route for /signin.html
 app.get('/signin.html', (req, res) => {
   console.log("Accessed /signin.html");
@@ -44,9 +45,29 @@ app.get('/signin.html', (req, res) => {
 // Route for /profile.html
 app.get('/profile', (req, res) => {
   console.log("Accessed /profile.html");
-  res.sendFile(path.join(__dirname, '../frontend/profile.html'));
-  auth = true;
+  if (!auth) {
+    console.log("inauth");
+    res.redirect('/signin.html');
+  } else {
+    console.log("authed");
+    res.sendFile(path.join(__dirname, '../frontend/profile.html'));
+    auth = true;
+  }
 });
+
+// Route for /newrx.html
+app.get('/newrx', (req, res) => {
+  console.log("Accessed /newrx.html");
+  if (!auth) {
+    console.log("inauth");
+    res.redirect('/signin.html');
+  } else {
+    console.log("authed");
+    res.sendFile(path.join(__dirname, '../frontend/newrx.html'));
+    auth = true;
+  }
+});
+
 
 app.use("/userDrugManager", userDrugManagerRouter);
 
@@ -225,10 +246,7 @@ app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-//route for camera pages
-app.get('/newrx', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/newrx.html'));
-});
+
 
 app.get('/signout', passageAuthMiddleware, async (req, res) => {
   try {
