@@ -39,6 +39,13 @@ app.get('/signin.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/signin.html'));
 });
 
+// Route for /profile.html
+app.get('/profile', (req, res) => {
+  console.log("Accessed /profile.html");
+  res.sendFile(path.join(__dirname, '../frontend/profile.html'));
+  auth = true;
+});
+
 app.use("/userDrugManager", userDrugManagerRouter);
 
 //get user info:
@@ -135,7 +142,6 @@ app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
     const user = await passage.user.get(userID);
 
     const userName = user.id 
-
     
     // const userDrugResponse = await fetch(`http://your-api-domain/api/userDrugManager?userId=${userName}`);
     console.log(`http://localhost:3000/userDrugManager?userId=${userName}`);
