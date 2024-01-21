@@ -39,6 +39,8 @@ app.get('/signin.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/signin.html'));
 });
 
+app.use("/userDrugManager", userDrugManagerRouter);
+
 //get user info:
 
 let passage = new Passage({appID: 'w7Pn1nhzopfGmzRZhlDetRrN',
@@ -124,6 +126,37 @@ app.get('/api/getUserID', passageAuthMiddleware, async (req, res) => {
   }
 });
 
+// app.use('/api/getTableData', userDrugRouter);
+
+app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
+  console.log("getting table data lol");
+  try {
+    const userID = res.userID;
+    const user = await passage.user.get(userID);
+
+    const userName = user.id 
+
+    
+    // const userDrugResponse = await fetch(`http://your-api-domain/api/userDrugManager?userId=${userName}`);
+    console.log(`http://localhost:3000/userDrugManager?userId=${userName}`);
+    const userDrugResponse = await fetch(`http://localhost:3000/userDrugManager?userId=${userName}`);
+    if (userDrugResponse.ok) {
+      const userDrugData = await userDrugResponse.json();
+      console.log('User Drug Data:', userDrugData);
+
+
+      // Return the combined data
+      res.json(userDrugData);
+    } else {
+      console.error('Error fetching user drug data:', userDrugResponse.status, userDrugResponse.statusText);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
 
@@ -153,8 +186,6 @@ app.get('/signout', passageAuthMiddleware, async (req, res) => {
     res.redirect('/error.html');
   }
 });
-
-app.use("/userDrugManager", userDrugManagerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
