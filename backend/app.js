@@ -155,7 +155,6 @@ app.get('/api/getInfo', passageAuthMiddleware, async (req, res) => {
 
 
 app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
-  console.log("getting table data lol");
   try {
     const userID = res.userID;
     const user = await passage.user.get(userID);
@@ -163,12 +162,9 @@ app.get('/api/getTableData', passageAuthMiddleware, async (req, res) => {
     const userName = user.id 
     
     // const userDrugResponse = await fetch(`http://your-api-domain/api/userDrugManager?userId=${userName}`);
-    //console.log(`http://localhost:3000/userDrugManager?userId=${userName}`);
     const userDrugResponse = await fetch(`http://localhost:3000/userDrugManager?userId=${userName}`);
     if (userDrugResponse.ok) {
       const userDrugData = await userDrugResponse.json();
-      // console.log('User Drug Data:', userDrugData);
-
 
       // Return the combined data
       res.json(userDrugData);
@@ -221,48 +217,6 @@ app.post('/api/process-drug-deletion', passageAuthMiddleware, async (req, res) =
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
-
-
-// app.delete('/api/process-drug-deletion', passageAuthMiddleware, async (req, res) => {
-//   const drugName = req.body.drugName;
-//   console.log("Drug name received for processing: " + drugName);
-//   console.log("Table removing one");
-//   res.status(200).json({ message: 'Drug name received and logged' });
-
-  // try {
-  //     const userID = res.locals.userID; // Assuming this is correctly set by your middleware
-
-  //     const drugNameToRemove = req.body.drugName; // Getting the drug name from the request body
-  //     console.log("Drug name to remove: " + drugNameToRemove);
-
-  //     // Make a call to the internal API to remove the drug
-  //     const response = await fetch('http://localhost:3000/remove-all', {
-  //         method: 'DELETE',
-  //         headers: {
-  //             'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ userId: userID, drugs: [drugNameToRemove] }),
-  //     });
-
-  //     if (response.ok) {
-  //         const result = await response.json();
-  //         console.log('Result:', result);
-  //         res.status(200).json(result);
-  //     } else {
-  //         console.error('Error in API call:', response.status, response.statusText);
-  //         res.status(500).json({ error: 'Internal Server Error' });
-  //     }
-  // } catch (error) {
-  //     console.error('Error:', error);
-  //     res.status(500).json({ error: 'Internal Server Error' });
-  // }
-// });
-
-
-
-
 
 // Serve static files from the 'frontend' folder
 app.use(express.static(path.join(__dirname, '../frontend')));
