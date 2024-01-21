@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import Passage from '@passageidentity/passage-node';
 import userDrugManagerRouter from './routes/userDrugManager.js';
-import { sendSMS, sendNotification } from './smsService.js';
+import { sendSMS, setNotificationPeriod } from './smsService.js';
 
 
 
