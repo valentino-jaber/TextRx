@@ -1,6 +1,7 @@
 const express = require('express');
 var router = express.Router();
-var Models = require("../utils/db.js");
+var dbModels = require("../utils/db.js").Models;
+var dbFunctions = require("../utils/db.js").Functions;
 const bodyParser = require('body-parser');
 var url = require('url');
 
@@ -11,7 +12,7 @@ router.use(bodyParser.json())
 router.get('/', async function(req, res, next) {
     try {
       let queriedUser = url.parse(req.url, true).query.userId;
-      const userDrug = await Models.UserDrugCollection.find({userId: `${queriedUser}`});
+      const userDrug = await dbModels.UserDrugCollection.find({userId: `${queriedUser}`});
       console.log(typeof userDrug);
       console.log(userDrug);
       res.send(userDrug);
@@ -29,7 +30,7 @@ router.post('/upload', async (req, res) => {
     const {userId, drugs} = req.body;
   
     // Create a new document
-    const userDrug = new Models.UserDrugCollection({ userId , drugs});
+    const userDrug = new dbModels.UserDrugCollection({ userId , drugs});
   
     // Save the document to MongoDB
     try {
@@ -42,6 +43,50 @@ router.post('/upload', async (req, res) => {
 });
 
 // PUT
+router.put('/remove-one', async (req, res) => {
+  
+      const userId = req.body.userId;
+      let inputDrugs = req.body.drugs;
+      const userDrugs = await dbFunctions.dbFindRecord(dbModels.UserDrugCollection, { userId });
+      if (userDrugs == null) {
+        console.log(`User with userId ${userId} not found`);
+        res.status(404).send();
+        return;
+      } else {
+        console.log("Get userId: " + userDrugs.userId);
+      }
+      let drugs = userDrugs.drugs;
+  
+      for (let drugName of inputDrugs) {
+        
+        console.log("Drug name: " + drugName);
+
+        const drugIndex = drugs.findIndex((i) => i.drugName == drugName);
+        if (drugIndex !== -1) {
+          let drug = drugs[drugIndex];
+          if (drug.quantity >= 1) {
+            // Decrement count
+            let newCount = drug.quantity - 1;
+            console.log("new drug quantity " + newCount);
+  
+            let filter = {userId};
+            let updateCount = {$set: {
+              [`drugs.${drugIndex}.quantity`]: newCount
+            }}
+            await dbFunctions.dbUpdateOne(dbModels.UserDrugCollection, filter, updateCount);
+          }
+          
+        } else {
+          console.log(`Ingredient ${drugName} not found`);
+        }
+        
+      }
+  
+      res.status(200).send("Successfully updated the database");
+      return;
+  
+  });
+  
 
 // DELETE
 
