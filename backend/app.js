@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const uploadDrugRoute = require("./routes/uploadDrug.js");
 
 const app = express();
 const port = 3000;
