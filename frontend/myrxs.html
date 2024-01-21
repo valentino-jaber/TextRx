@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>TextRx - Your Prescription Reminder</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -45,8 +45,8 @@
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+                <a href="dashboard.html" class="navbar-brand mx-4 mb-3">
+                    <img src="img/TxtRxLogo.png" alt="TextRx Logo" class="img-fluid">
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -188,77 +188,95 @@
 
 
             <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Recent Sales End -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">Your Meds</h6>
+            <a href="">Show All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-dark">
+                        <th scope="col"><input class="form-check-input" type="checkbox"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Dosage</th>
+                        <th scope="col">Amount Left</th>
+                        <th scope="col">Run out Date</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="data-table-body">
+                    <!-- Use the correct id for the table body -->
+                </tbody>
+            </table>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', async () => {
+                    try {
+                        // Fetch userId from another endpoint
+                        const userIdResponse = await fetch('/api/getUserID');
+                        if (!userIdResponse.ok) {
+                            throw new Error(`HTTP error! Status: ${userIdResponse.status}`);
+                        }
+                
+                        const userData = await userIdResponse.json();
+                        const userId = userData.name;
+                
+                        console.log("USERID: " + userId);
+                        // Now, use the obtained userId to fetch data from userDrugManager
+                        // const userDrugManagerResponse = await fetch(`/api/userDrugManager?userId=${userId}`);
+                        const userDrugManagerResponse = await fetch(`/api/getTableData?userId=${userId}`);
+                        if (!userDrugManagerResponse.ok) {
+                            throw new Error(`HTTP error! Status: ${userDrugManagerResponse.status}`);
+                        }
+                
+                        const userDrugManagerData = await userDrugManagerResponse.json();
+                        console.log('Response from userDrugManager:', userDrugManagerData);
+                
+                        // Now, you can call your function to populate the table
+                        populateTable(userDrugManagerData);
+                    } catch (error) {
+                        console.error('Error fetching data:', error);
+                    }
+                
+                    // Function to populate the table
+                    function populateTable(data) {
+    console.log("populating table");
+    // Get the table body
+    const tableBody = document.querySelector('#data-table-body');
+
+    if (!Array.isArray(data)) {
+        console.error('API response does not contain an array:', data);
+        return;
+    }
+
+    // Iterate through the data and create rows
+    data.forEach(user => {
+        user.drugs.forEach(drug => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                 <td></td>
+                <td>${drug.drugName}</td>
+                <td>${drug.instruction}</td>
+                <td>${drug.quantity}</td>
+                <td>${drug.expiryDate ? new Date(drug.expiryDate).toLocaleDateString() : 'N/A'}</td>
+            `;
+            // Add more cells based on your JSON structure
+            tableBody.appendChild(row);
+        });
+    });
+}
+
+                });
+                </script>
+
+        </div>
+    </div>
+</div>
+<!-- Recent Sales End -->
+
 
             
         </div>

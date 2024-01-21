@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Drug Detector</title>
+    <link href="img/favicon.ico" rel="icon">
     <style>
         body {
             display: flex;
@@ -28,7 +28,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>TextRx - Your Prescription Reminder</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -70,8 +70,8 @@
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
-                <a href="index.html" class="navbar-brand mx-4 mb-3">
-                    <h3 class="text-primary"><i class="fa fa-hashtag me-2"></i>DASHMIN</h3>
+                <a href="dashboard.html" class="navbar-brand mx-4 mb-3">
+                    <img src="img/TxtRxLogo.png" alt="TextRx Logo" class="img-fluid">
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
@@ -347,7 +347,6 @@
                                                 const response = await fetch('/api/getUserID'); 
                                                 const data = await response.json();
                                                 const userId = data.name;
-                                                // console.log("USER1: " + data.name);
 
                                                 
 
@@ -377,7 +376,7 @@
                                                             drugName: matchingSubstring,
                                                             expiryDate: expiryValue,
                                                             quantity: parseInt(quantityValue),
-                                                            dosage: parseInt(dosageValue),
+                                                            instruction: parseInt(dosageValue),
                                                         }],
                                                     }),
                                                 })
