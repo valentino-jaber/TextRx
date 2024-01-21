@@ -14,9 +14,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(bodyParser.json());
 
-const port = 3000;
+app.use(bodyParser.json());
+const port = process.env.PORT || 3000;
 
 let auth = false;
 
