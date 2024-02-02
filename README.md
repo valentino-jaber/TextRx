@@ -1,3 +1,4 @@
+# TextRX :pill:
 ## Inspiration
 Embarking on the healthcare track at NWHacks 2024, our team was fueled by a genuine passion for enhancing prescription usability. Many of us have faced the challenges of managing prescriptions, inspiring us to create a solution that keeps patients on track.
 
