@@ -24,7 +24,7 @@
     "@vonage/server-sdk": "^3.12.1",
     "ejs": "^3.1.9",
     "express": "^4.21.1",
-    "express-session": "^1.17.3",
+    "express-session": "^1.18.1",
     "mongodb": "^6.3.0",
     "mongoose": "^8.8.3",
     "node-fetch": "^3.3.2",
